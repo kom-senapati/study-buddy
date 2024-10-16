@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sheet";
 
 import { Button } from "./ui/button";
+import Markdown from "react-markdown";
 
 export default function StudyPlanCard({
   plan,
@@ -77,10 +78,10 @@ export default function StudyPlanCard({
           <SheetDescription>{plan.description}</SheetDescription>
         </SheetHeader>
         <div className="mt-6">
-          <h3 className="font-medium mb-2">Study Plan</h3>
-          {plan.studyPlan}
-          <h3 className="font-medium mb-2">Study Tips</h3>
-          {plan.tips}
+          <h3 className="font-bold text-xl mb-4">Study Plan</h3>
+          <Markdown>{plan.studyPlan}</Markdown>
+          <h3 className="font-bold text-xl my-4">Study Tips</h3>
+          <Markdown>{plan.tips}</Markdown>
         </div>
       </SheetContent>
     </Sheet>

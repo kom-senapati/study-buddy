@@ -16,7 +16,7 @@ export default function Filter({
         <Button
           variant="outline"
           size="icon"
-          className="fixed bottom-16 right-4 rounded-full"
+          className="fixed bottom-32 right-6 rounded-full"
           onClick={() => setShowStarredOnly(!showStarredOnly)}
         >
           <Star

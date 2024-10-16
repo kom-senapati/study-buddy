@@ -23,8 +23,8 @@ export default function AddStudyPlan({
 }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [newPlanTitle, setNewPlanTitle] = useState<string>("");
+
   const generateNewPlan = () => {
-    console.log(`Generating new study plan with title: ${newPlanTitle}`);
     onAdd(newPlanTitle);
     setIsDialogOpen(false);
   };
@@ -34,7 +34,10 @@ export default function AddStudyPlan({
       <Tooltip>
         <TooltipTrigger asChild>
           <DialogTrigger asChild>
-            <Button className="fixed bottom-4 right-4 rounded-full" size="icon">
+            <Button
+              className="fixed bottom-20 right-6 rounded-full"
+              size="icon"
+            >
               <Plus className="h-4 w-4" />
             </Button>
           </DialogTrigger>

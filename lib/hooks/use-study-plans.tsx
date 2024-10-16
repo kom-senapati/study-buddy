@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 import { StudyPlan } from "../study-plans.types";
+import { useCopilotAction, useCopilotReadable } from "@copilotkit/react-core";
 
 let nextId = 1;
 
@@ -40,17 +41,14 @@ export function StudyPlansProvider({ children }: { children: ReactNode }) {
     setStudyPlans([...studyPlans, { ...plan, id: nextId++ }]);
   };
 
-  const generateStudyPlan = (title: string) => {
-    const newPlan: StudyPlan = {
-      id: nextId++,
-      title,
-      description: "This is a sample study plan description",
-      studyPlan: "This is a sample study plan",
-      tips: "These are some sample study tips",
-      starred: false,
-    };
+  const generateStudyPlan = async (title: string) => {
+    const response = await fetch("/api/study-plan", {
+      method: "POST",
+      body: JSON.stringify({ title }),
+    });
+    const newPlan = await response.json();
 
-    addStudyPlan(newPlan);
+    addStudyPlan({ ...newPlan, starred: false });
   };
 
   const deleteStudyPlan = (id: string) => {
@@ -66,6 +64,64 @@ export function StudyPlansProvider({ children }: { children: ReactNode }) {
       )
     );
   };
+
+  useCopilotReadable({
+    description: "This is a list of study plans",
+    value: studyPlans,
+  });
+
+  useCopilotAction({
+    name: "addStudyPlan",
+    description:
+      "Generates and add a new study plan based on user query and title",
+    parameters: [
+      {
+        name: "title",
+        description: "The title of the topic",
+        type: "string",
+      },
+      {
+        name: "description",
+        description:
+          "The short description of the study plan for topic under 100 characters",
+        type: "string",
+      },
+      {
+        name: "studyPlan",
+        description:
+          "A step by step study plan(atleast 5 steps, generally 10 steps) for the topic in ordered list markdown format",
+        type: "string",
+      },
+      {
+        name: "tips",
+        description:
+          "Tips(atmost 5) for the study plan in unordered list markdown format",
+        type: "string",
+      },
+    ],
+    handler: async (args) => {
+      console.log(args);
+      addStudyPlan({
+        ...args,
+        starred: false,
+      });
+    },
+  });
+
+  useCopilotAction({
+    name: "deleteStudyPlan",
+    description: "Deletes a study plan",
+    parameters: [
+      {
+        name: "id",
+        description: "The id of the study plan to delete",
+        type: "string",
+      },
+    ],
+    handler: ({ id }) => {
+      deleteStudyPlan(id);
+    },
+  });
 
   return (
     <StudyPlansContext.Provider
